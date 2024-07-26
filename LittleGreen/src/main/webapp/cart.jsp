@@ -17,6 +17,9 @@
 <body>
     <div class="container mt-5">
         <h1>Your Cart</h1>
+        <div class="d-flex justify-content-end mb-4">
+            <a href="index.jsp" class="btn btn-success">View Product List</a>
+        </div>
         <% if (cart.getItems().isEmpty()) { %>
             <p>Your cart is empty. <a href="index.jsp">Shop now</a>.</p>
         <% } else { %>

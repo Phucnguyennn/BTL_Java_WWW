@@ -18,7 +18,8 @@ CREATE TABLE users (
     password NVARCHAR(255) NOT NULL,
     name NVARCHAR(255),
     address NVARCHAR(1000),
-    phoneNumber NVARCHAR(50)
+    phoneNumber NVARCHAR(50),
+	role VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE orders (
@@ -59,11 +60,15 @@ INSERT INTO products (name, description, price, brand, fragranceType, volume, ge
 ('Abercrombie & Fitch Fierce', 'A bold and masculine fragrance with notes of musk and sandalwood.', 85.00, 'Abercrombie & Fitch', 'Woody', 100, 'Male', 2002, 70, 'images/abercrombie-fierce.jpg');
 
 
-INSERT INTO users (email, password, name, address, phoneNumber)
-VALUES 
-('john.doe@example.com', 'hashedpassword1', 'John Doe', '123 Elm Street, Springfield', '123-456-7890'),
-('jane.smith@example.com', 'hashedpassword2', 'Jane Smith', '456 Oak Avenue, Springfield', '098-765-4321'),
-('admin@example.com', 'adminhashedpassword', 'Admin User', '789 Maple Road, Springfield', '111-222-3333');
+INSERT INTO Users (email, password, name, address, phoneNumber, role) VALUES
+('admin@example.com', 'admin123', 'Admin User', '123 Admin Street', '1234567890', 'admin'),
+('customer1@example.com', 'cust123', 'Customer One', '456 Customer Lane', '2345678901', 'customer'),
+('customer2@example.com', 'cust123', 'Customer Two', '789 Customer Blvd', '3456789012', 'customer'),
+('customer3@example.com', 'cust123', 'Customer Three', '101 Customer Road', '4567890123', 'customer'),
+('customer4@example.com', 'cust123', 'Customer Four', '202 Customer Avenue', '5678901234', 'customer');
+
+
+
 INSERT INTO orders (userId, orderDate, totalAmount, status)
 VALUES 
 (1, '2024-07-20', 120.00, 'Shipped'),

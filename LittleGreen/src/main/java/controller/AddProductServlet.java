@@ -34,7 +34,7 @@ public class AddProductServlet extends HttpServlet {
 
         ProductDAO productDAO = new ProductDAO();
         try {
-            productDAO.addProduct(product);
+            productDAO.insertProduct(product);
             response.sendRedirect("manageProducts.jsp");
         } catch (Exception e) {
             e.printStackTrace();

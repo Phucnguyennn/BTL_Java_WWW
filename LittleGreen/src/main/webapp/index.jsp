@@ -23,6 +23,14 @@
         .navbar-custom .navbar-nav .nav-link {
             color: #348129;
         }
+        .navbar-custom .navbar-brand {
+            font-weight: bold;
+            font-style: italic;
+            padding: 2px 5px;
+        }
+        .navbar-custom .navbar-nav .nav-link.home-link {
+            color: #d9534f;
+        }
         .card {
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: 0.3s;
@@ -61,7 +69,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
-                <!-- Add other nav items here if needed -->
+                <li class="nav-item">
+                    <a class="nav-link home-link" href="index.jsp">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link home-link" href="index.jsp">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link home-link" href="#">Contact</a>
+                </li>
             </ul>
             <form class="form-inline my-2 my-lg-0 mr-3" action="searchProducts.jsp" method="get">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="query">
@@ -73,9 +89,69 @@
                         <i class="fas fa-shopping-cart"></i> View Cart
                     </a>
                 </li>
+                <!-- Button trigger modal for login/register -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#authModal">Login / Register</a>
+                </li>
             </ul>
         </div>
     </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="authModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="authModalLabel">Login / Register</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="authTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="true">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="authTabsContent">
+                        <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                            <form action="login.jsp" method="post">
+                                <div class="form-group">
+                                    <label for="loginEmail">Email address</label>
+                                    <input type="email" class="form-control" id="loginEmail" name="email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword">Password</label>
+                                    <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                            <form action="register.jsp" method="post">
+                                <div class="form-group">
+                                    <label for="registerName">Name</label>
+                                    <input type="text" class="form-control" id="registerName" name="name" placeholder="Enter name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerEmail">Email address</label>
+                                    <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerPassword">Password</label>
+                                    <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Register</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container mt-5">
         <form action="filterProducts.jsp" method="get" class="form-inline mb-4">
@@ -124,8 +200,11 @@
             <% } %>
         </div>
     </div>
+
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

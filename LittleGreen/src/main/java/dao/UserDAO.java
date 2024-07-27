@@ -1,66 +1,46 @@
 package dao;
 
-
+import model.User;
 import java.sql.*;
 
-import model.User;
-import util.DatabaseConnection;
-
 public class UserDAO {
-    private Connection getConnection() {
-        return DatabaseConnection.getConnection();
-    }
+    private String jdbcURL = "jdbc:mysql://localhost:3306/yourdatabase";
+    private String jdbcUsername = "root";
+    private String jdbcPassword = "password";
 
-    public void addUser(User user) throws SQLException {
-        String sql = "INSERT INTO users (email, password, name, address, phoneNumber) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getEmail());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getName());
-            pstmt.setString(4, user.getAddress());
-            pstmt.setString(5, user.getPhoneNumber());
-            pstmt.executeUpdate();
-        }
-    }
+    private static final String VALIDATE_USER_SQL = "SELECT * FROM Users WHERE email = ? AND password = ?";
 
-    public User getUserByEmail(String email) throws SQLException {
-        String sql = "SELECT * FROM users WHERE email = ?";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, email);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt("id"));
-                    user.setEmail(rs.getString("email"));
-                    user.setPassword(rs.getString("password"));
-                    user.setName(rs.getString("name"));
-                    user.setAddress(rs.getString("address"));
-                    user.setPhoneNumber(rs.getString("phoneNumber"));
-                    return user;
-                }
+    public User validateUser(String email, String password) {
+        User user = null;
+        try (Connection connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+             PreparedStatement preparedStatement = connection.prepareStatement(VALIDATE_USER_SQL)) {
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setName(rs.getString("name"));
+                user.setAddress(rs.getString("address"));
+                user.setPhoneNumber(rs.getString("phoneNumber"));
+                user.setRole(rs.getString("role"));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return user;
     }
 
-    public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE users SET password = ?, name = ?, address = ?, phoneNumber = ? WHERE email = ?";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, user.getPassword());
-            pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getAddress());
-            pstmt.setString(4, user.getPhoneNumber());
-            pstmt.setString(5, user.getEmail());
-            pstmt.executeUpdate();
-        }
-    }
+	public void addUser(User user) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    public void deleteUser(String email) throws SQLException {
-        String sql = "DELETE FROM users WHERE email = ?";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, email);
-            pstmt.executeUpdate();
-        }
-    }
+	public User getUserByEmailAndPassword(String email, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
-

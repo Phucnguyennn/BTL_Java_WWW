@@ -51,7 +51,7 @@ public class AdminServlet extends HttpServlet {
             product.setImageUrl(request.getParameter("imageUrl"));
 
             try {
-				productDAO.addProduct(product);
+				productDAO.insertProduct(product);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

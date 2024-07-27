@@ -7,15 +7,25 @@ public class User {
 	private String name;
 	private String address;
 	private String phoneNumber;
+	private String role;
 
-	public User(int id, String email, String password, String name, String address, String phoneNumber) {
+	public String getRole() {
+		return role;
+	}
+
+	public User( String email, String password, String name, String address, String phoneNumber, String role) {
 		super();
-		this.id = id;
+		
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
+		this.role = role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public User() {

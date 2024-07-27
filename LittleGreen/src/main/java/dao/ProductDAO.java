@@ -1,107 +1,117 @@
 package dao;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 import model.Product;
 import util.DatabaseConnection;
 
 public class ProductDAO {
-    private Connection getConnection() {
-        return DatabaseConnection.getConnection();
-    }
+	 @SuppressWarnings("unused")
+	private Connection getConnection() {
+	        return DatabaseConnection.getConnection();
+	    }
+    // SQL queries
+    private static final String INSERT_PRODUCT_SQL = "INSERT INTO Products (name, description, price, brand, fragranceType, volume, gender, launchYear, stockQuantity, imageUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_PRODUCT_BY_ID = "SELECT * FROM Products WHERE id = ?";
+    private static final String SELECT_ALL_PRODUCTS = "SELECT * FROM Products";
+    private static final String UPDATE_PRODUCT_SQL = "UPDATE Products SET name = ?, description = ?, price = ?, brand = ?, fragranceType = ?, volume = ?, gender = ?, launchYear = ?, stockQuantity = ?, imageUrl = ? WHERE id = ?";
+    private static final String DELETE_PRODUCT_SQL = "DELETE FROM Products WHERE id = ?";
 
-    public void addProduct(Product product) throws SQLException {
-        String sql = "INSERT INTO products (name, description, price, brand, fragranceType, volume, gender, launchYear, stockQuantity, imageUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection(); 
-        	PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, product.getName());
-            pstmt.setString(2, product.getDescription());
-            pstmt.setBigDecimal(3, product.getPrice());
-            pstmt.setString(4, product.getBrand());
-            pstmt.setString(5, product.getFragranceType());
-            pstmt.setInt(6, product.getVolume());
-            pstmt.setString(7, product.getGender());
-            pstmt.setInt(8, product.getLaunchYear());
-            pstmt.setInt(9, product.getStockQuantity());
-            pstmt.setString(10, product.getImageUrl());
-            pstmt.executeUpdate();
-        }
-    }
-
-    public Product getProductById(int id) throws SQLException {
-        String sql = "SELECT * FROM products WHERE id = ?";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    Product product = new Product();
-                    product.setId(rs.getInt("id"));
-                    product.setName(rs.getString("name"));
-                    product.setDescription(rs.getString("description"));
-                    product.setPrice(rs.getBigDecimal("price"));
-                    product.setBrand(rs.getString("brand"));
-                    product.setFragranceType(rs.getString("fragranceType"));
-                    product.setVolume(rs.getInt("volume"));
-                    product.setGender(rs.getString("gender"));
-                    product.setLaunchYear(rs.getInt("launchYear"));
-                    product.setStockQuantity(rs.getInt("stockQuantity"));
-                    product.setImageUrl(rs.getString("imageUrl"));
-                    return product;
-                }
-            }
-        }
-        return null;
-    }
-
+    // Method to get all products
     public List<Product> getAllProducts() throws SQLException {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM products";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
+        try (Connection connection = DatabaseConnection.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SELECT_ALL_PRODUCTS)) {
+
+            while (resultSet.next()) {
                 Product product = new Product();
-                product.setId(rs.getInt("id"));
-                product.setName(rs.getString("name"));
-                product.setDescription(rs.getString("description"));
-                product.setPrice(rs.getBigDecimal("price"));
-                product.setBrand(rs.getString("brand"));
-                product.setFragranceType(rs.getString("fragranceType"));
-                product.setVolume(rs.getInt("volume"));
-                product.setGender(rs.getString("gender"));
-                product.setLaunchYear(rs.getInt("launchYear"));
-                product.setStockQuantity(rs.getInt("stockQuantity"));
-                product.setImageUrl(rs.getString("imageUrl"));
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setPrice(resultSet.getBigDecimal("price"));
+                product.setBrand(resultSet.getString("brand"));
+                product.setFragranceType(resultSet.getString("fragranceType"));
+                product.setVolume(resultSet.getInt("volume"));
+                product.setGender(resultSet.getString("gender"));
+                product.setLaunchYear(resultSet.getInt("launchYear"));
+                product.setStockQuantity(resultSet.getInt("stockQuantity"));
+                product.setImageUrl(resultSet.getString("imageUrl"));
                 products.add(product);
             }
         }
         return products;
     }
 
-    public void updateProduct(Product product) throws SQLException {
-        String sql = "UPDATE products SET name = ?, description = ?, price = ?, brand = ?, fragranceType = ?, volume = ?, gender = ?, launchYear = ?, stockQuantity = ?, imageUrl = ? WHERE id = ?";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, product.getName());
-            pstmt.setString(2, product.getDescription());
-            pstmt.setBigDecimal(3, product.getPrice());
-            pstmt.setString(4, product.getBrand());
-            pstmt.setString(5, product.getFragranceType());
-            pstmt.setInt(6, product.getVolume());
-            pstmt.setString(7, product.getGender());
-            pstmt.setInt(8, product.getLaunchYear());
-            pstmt.setInt(9, product.getStockQuantity());
-            pstmt.setString(10, product.getImageUrl());
-            pstmt.setInt(11, product.getId());
-            pstmt.executeUpdate();
+    // Method to get a product by ID
+    public Product getProductById(int id) throws SQLException {
+        Product product = null;
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCT_BY_ID)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setPrice(resultSet.getBigDecimal("price"));
+                product.setBrand(resultSet.getString("brand"));
+                product.setFragranceType(resultSet.getString("fragranceType"));
+                product.setVolume(resultSet.getInt("volume"));
+                product.setGender(resultSet.getString("gender"));
+                product.setLaunchYear(resultSet.getInt("launchYear"));
+                product.setStockQuantity(resultSet.getInt("stockQuantity"));
+                product.setImageUrl(resultSet.getString("imageUrl"));
+            }
+        }
+        return product;
+    }
+
+    // Method to insert a new product
+    public void insertProduct(Product product) throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCT_SQL)) {
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setString(2, product.getDescription());
+            preparedStatement.setBigDecimal(3, product.getPrice());
+            preparedStatement.setString(4, product.getBrand());
+            preparedStatement.setString(5, product.getFragranceType());
+            preparedStatement.setInt(6, product.getVolume());
+            preparedStatement.setString(7, product.getGender());
+            preparedStatement.setInt(8, product.getLaunchYear());
+            preparedStatement.setInt(9, product.getStockQuantity());
+            preparedStatement.setString(10, product.getImageUrl());
+            preparedStatement.executeUpdate();
         }
     }
 
+    // Method to update a product
+    public void updateProduct(Product product) throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCT_SQL)) {
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setString(2, product.getDescription());
+            preparedStatement.setBigDecimal(3, product.getPrice());
+            preparedStatement.setString(4, product.getBrand());
+            preparedStatement.setString(5, product.getFragranceType());
+            preparedStatement.setInt(6, product.getVolume());
+            preparedStatement.setString(7, product.getGender());
+            preparedStatement.setInt(8, product.getLaunchYear());
+            preparedStatement.setInt(9, product.getStockQuantity());
+            preparedStatement.setString(10, product.getImageUrl());
+            preparedStatement.setInt(11, product.getId());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    // Method to delete a product
     public void deleteProduct(int id) throws SQLException {
-        String sql = "DELETE FROM products WHERE id = ?";
-        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCT_SQL)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
         }
     }
 }

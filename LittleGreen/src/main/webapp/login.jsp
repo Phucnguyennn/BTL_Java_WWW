@@ -7,8 +7,8 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Login</h1>
-        <form action="login" method="post">
+        <h2>Login</h2>
+        <form action="LoginServlet" method="post">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" name="email" required>
